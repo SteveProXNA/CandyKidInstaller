@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Fragment>
+
+	<!--
+		Defined in Setup.wxs, the "TARGETDIR" is not actually created, it's just a crutch
+		in WiX to allow the files to share a common root
+	-->
+	<DirectoryRef Id="TARGETDIR">
+
+		<!--
+		ProgramMenuFolder is a special name that resolves to the start menu folder.
+		The files (see below) can indicate that they want a shortcut created in
+		another folder. By defining this folder, we can make them put a shortcut
+		into the start menu!
+		-->
+		<Directory Id='ProgramMenuFolder' Name='Programs'>
+		<Directory Id='MyGameProgramMenuFolder' Name='Retro Candy Kid FREE'>
+			<Component Id="StartMenuEntriesComponent" Guid="{DB05C544-A19F-40DB-AB2F-1D5704429983}" DiskId="1">
+				<RemoveFolder Id='MyGameProgramMenuFolder' On='uninstall' />
+				<RegistryValue
+					Root='HKCU'
+					Key='SOFTWARE\SteveProStudios\RetroCandyKidFREE'
+					Name="ProgramMenuFolder"
+					Type='string'
+					Value='Installed'
+					KeyPath='yes'
+					/>
+			</Component>
+		</Directory>
+		</Directory>
+
+		<Directory Id="DesktopFolder" Name="Desktop">
+			<Component Id="ApplicationShortcutDesktop" Guid="{CD4BB115-4B38-4C3F-8FFE-7936CA8E5050}">
+				<Shortcut
+					Id="ApplicationDesktopShortcut"
+					Name="Retro Candy Kid FREE"
+					WorkingDirectory="INSTALLDIR"
+					Icon ="ProductIcon.ico"
+					Target="[INSTALLDIR]WindowsGame.exe"
+				/>
+				<RemoveFolder Id="DesktopFolder" On="uninstall"/>
+				<RegistryValue
+					Root="HKCU"
+					Key='SOFTWARE\SteveProStudios\RetroCandyKidFREE'
+					Name="DesktopFolder"
+					Type="integer"
+					Value="1"
+					KeyPath="yes"/>
+			</Component>
+		</Directory>
+
+		<!--
+		ProgramFilesFolder is a special name that is resolved to the system's
+		programs folder. This entry makes sure that INSTALLDIR, displayed in
+		directory selection dialog, initially points to "C:\Program files\RetroCandyKidFREE".
+		Note that this does not prevent the user from selecting an entirely
+		different path like "D:\Games\RetroCandyKidFREE".
+		-->
+		<Directory Id="ProgramFilesFolder" Name="PFiles">
+
+		<!--
+			Target directory you game will be installed to. Create more <Directory />
+			elements below this one to create subdirectories or add <File /> elements
+			to add files to a directory
+		-->
+		<Directory Id="INSTALLDIR" Name="RetroCandyKidFREE">
+
+			<!--
+			Any <File /> element must be contained in a <Component /> element.
+			Components are entirely internal to the installs and group inseperable
+			partS of your game. For example, you could have 4 components:
+			"shared", "game", "editor" and "docs".
+
+			An installer then sets up a series of features (see <Feature /> in Setup.wxs),
+			where each feature points to a number of components. Following the previous
+			example, two features named "game" and "editor" could be imagined where
+			both point to the "shared" component and to their own component.
+			-->
+			<Component Id="MyComponent" Guid="{26ED00FF-B689-49E2-A162-AB406A24A9E9}" DiskId="1">
+
+				<!--<File Id="LicenseFile" Name="license.rtf" Source="$(sys.SOURCEFILEDIR)/../Documents/license.rtf" />-->
+				<File Id="WindowsGameExe" Name="WindowsGame.exe.config" Source="$(sys.SOURCEFILEDIR)/../Content/WindowsGame.exe.config" />
+				<File Id="log4netdll" Name="log4net.dll" Source="$(sys.SOURCEFILEDIR)/../Content/log4net.dll" />
+				<File Id="NinjectDll" Name="Ninject.dll" Source="$(sys.SOURCEFILEDIR)/../Content/Ninject.dll" />
+
+				<File Id="GameExecutable" Name="WindowsGame.exe" KeyPath="yes" Source="$(sys.SOURCEFILEDIR)/../Content/WindowsGame.exe">
+					<Shortcut
+						Id="MyGameShortcut"
+						Name="Retro Candy Kid FREE shortcut"
+						Directory="MyGameProgramMenuFolder"
+						Advertise="yes"
+						WorkingDirectory="INSTALLDIR"
+						Icon ="ProductIcon.ico"
+						/>
+				</File>
+
+			</Component>
+
+		</Directory>
+		</Directory>
+
+	</DirectoryRef>
+
+</Fragment>
+</Wix>
