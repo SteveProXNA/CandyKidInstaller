@@ -29,7 +29,7 @@ Special thanks to Cygon for original XNA Installer [http://bit.ly/22pbNqw]
 
 ###### BLOG
 For more infomation please check out the following blog post:
-- Thursday, September 15th 2016 "Candy Kid WiX Installer" [http://bit.ly/1ONnvn7]
+- Friday, January 20th 2017 "Candy Kid WiX Installer" [http://bit.ly/2o1eq9n]
 
 ###### CONTACT
 - Blog:		http://steveproxna.blogspot.com
